@@ -29,6 +29,7 @@
             <div>
                 <button onclick="login()">Login</button>
                 <button onclick="getDashboard()">Get Dashboard</button>
+                <button onclick="getSettings()">Settings</button>
             </div>
         </main>
     </div>
@@ -55,6 +56,8 @@
 
     function getDashboard() {
         const token = localStorage.getItem('jwt');
+        window.addEventListener('popstate', e => console.log(e) );
+        history.pushState({success:true, myContent:'Dashboard pagee'}, '', '/api/dashboard')
         axios.get('/api/dashboard', {
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -62,7 +65,23 @@
         }).then(res => {
             if(res && res.data && res.data.success) {
                 document.querySelector('h1.row').innerHTML = 'Dashboard';
-                document.querySelector('main').innerHTML = res.data.myContent;
+                document.querySelector('main').innerHTML = res.data.myContent + "<br><button onclick=\"getSettings()\">Settings</button>";
+            }
+        });
+    }
+
+    function getSettings() {
+        const token = localStorage.getItem('jwt');
+        window.addEventListener('popstate', e => console.log(e) );
+        history.pushState({success:true, myContent:'Settings pagee'}, '', '/api/settings')
+        axios.get('/api/settings', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(res => {
+            if(res && res.data && res.data.success) {
+                document.querySelector('h1.row').innerHTML = 'Settings';
+                document.querySelector('main').innerHTML = res.data.myContent + "<br><button onclick=\"getDashboard()\">Dashboard</button>";
             }
         });
     }

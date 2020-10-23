@@ -64,6 +64,8 @@ app.get('/api/dashboard', jwtMW, (req, res) => {
         success: true,
         myContent: 'Secret content that only logged in people can see!!!'
     });
+    // window.addEventListener('popstate', e => console.log(e) );
+    // history.pushState({success:true, myContent:'Dashboard pageeeee'}, '', '/api/dashboard')
 });
 
 app.get('/api/prices', jwtMW, (req, res) => {
@@ -72,6 +74,20 @@ app.get('/api/prices', jwtMW, (req, res) => {
         success: true,
         myContent: 'The price is $3.99'
     });
+});
+
+app.all('/api/settings', jwtMW, (req, res) => {
+    //var data = document.querySelector('main').innerHTML = 'Hello!';
+    //myContent: 'hello';
+    console.log(req);
+    res.json({
+        success: true,
+        myContent: 'You are in the settings route now.'
+    });
+    history.pushState(res.json({ success:true, myContent:'You are in the settings route now.'}), '', '/api/settings.html')
+    // res.send('ok');
+    // window.addEventListener('popstate', e => console.log(e) );
+    // history.pushState({success:true, myContent:'Settings pageeeee'}, '', '/api/settings')
 });
 
 app.get('/', (req, res) => {
