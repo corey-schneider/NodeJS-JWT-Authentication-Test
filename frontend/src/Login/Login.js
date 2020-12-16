@@ -3,9 +3,45 @@ import Navigation from '../Navigation/Navigation';
 import '../App2.css';
 import Button from '../Button/Button';
 import { NavLink } from "react-router-dom";
+import axios from "axios";
 
+
+    let URL = 'http://localhost:3001'; // TODO change this when put on live web
 
 class Login extends Component {
+
+    constructor(props) {
+        super(props);
+        this.handleLogin = this.handleLogin.bind(this);
+    }
+
+    async handleLogin() {
+        const data = {
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value,
+        };
+
+        axios.post(URL+'/api/login', data).then(res => {
+            console.log(res);
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            if(res && res.data.success) {
+                const token = res.data.token;
+                localStorage.setItem('jwt', token);
+                alert('success.');
+                this.getDashboard();
+            }
+        }, error => {
+            if(error.response.status === 401) {
+                alert('401 unauthorized error.');
+            } else {
+                alert(error.response.status+' error');
+            }
+        });
+    }
+
+
+
   render() {
     return (
         <div align="center">
@@ -22,11 +58,9 @@ class Login extends Component {
             </div>
 
             <div>
-                {/* <button onclick="login()">Login</button>
-                <button onclick="getDashboard()">Get Dashboard</button>
-                <button onclick="getSettings()">Settings</button> */}
                 <br/>
-                <Button title="Login" onClick={() => this.handleLogin} />
+                {/* <Button title="Login" onClick={() => this.handleLogin} /> */}
+                <button onClick={this.handleLogin}>Log in</button>
                 <Button title="Get Dashboard" />
                 <Button title="Settings" />
             </div>
