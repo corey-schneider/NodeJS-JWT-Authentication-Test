@@ -5,22 +5,26 @@ const exjwt = require('express-jwt');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const path = require('path');
+const cors = require('cors');
 
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
     res.setHeader('Access-Control-Allow-Headers', 'Content-type,Authorization');
     next();
 });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-const PORT = 3000;
+const PORT = 3001;
+app.use(cors());
 
 const secretKey = 'My super secret key';
 const jwtMW = exjwt({
     secret: secretKey,
     algorithms: ['HS256']
 });
+
+
 
 let users = [
     {
@@ -32,8 +36,13 @@ let users = [
         id: 2,
         username: 'test',
         password: '321'
+    },
+    {
+        id: 3,
+        username: 'blah',
+        password: 'hi'
     }
-]
+];
 
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
@@ -44,7 +53,8 @@ app.post('/api/login', (req, res) => {
             res.json({
                 success: true,
                 err: null,
-                token
+                token,
+                username
             });
             break;
         } else {
@@ -59,17 +69,13 @@ app.post('/api/login', (req, res) => {
 });
 
 app.get('/api/dashboard', jwtMW, (req, res) => {
-    //console.log(req);
     res.json({
         success: true,
         myContent: 'Secret content that only logged in people can see!!!'
     });
-    // window.addEventListener('popstate', e => console.log(e) );
-    // history.pushState({success:true, myContent:'Dashboard pageeeee'}, '', '/api/dashboard')
 });
 
 app.get('/api/prices', jwtMW, (req, res) => {
-    //console.log(req);
     res.json({
         success: true,
         myContent: 'The price is $3.99'
@@ -77,17 +83,10 @@ app.get('/api/prices', jwtMW, (req, res) => {
 });
 
 app.all('/api/settings', jwtMW, (req, res) => {
-    //var data = document.querySelector('main').innerHTML = 'Hello!';
-    //myContent: 'hello';
-    console.log(req);
     res.json({
         success: true,
         myContent: 'You are in the settings route now.'
     });
-    history.pushState(res.json({ success:true, myContent:'You are in the settings route now.'}), '', '/api/settings.html')
-    // res.send('ok');
-    // window.addEventListener('popstate', e => console.log(e) );
-    // history.pushState({success:true, myContent:'Settings pageeeee'}, '', '/api/settings')
 });
 
 app.get('/', (req, res) => {
@@ -95,8 +94,6 @@ app.get('/', (req, res) => {
 });
 
 app.use(function (err, req, res, next) {
-    // console.log(err.name == 'UnauthorizedError');
-    // console.log(err);
     if(err.name === 'UnauthorizedError') {
         res.status(401).json({
             success: false,

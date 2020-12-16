@@ -1,0 +1,75 @@
+.navbar ul {
+    list-style-type: none;
+    margin: auto; /*center align the navigation bar*/
+    padding: 0;
+    border-radius: 3px;
+    border: 1px solid #000000;
+    overflow: hidden;
+    background-color: #333333;
+    width:60%;
+}
+
+.navbar li {
+    float: left;
+    font-family: "Verdana", Arial, Times, serif; /*backup fonts*/
+    border-right:1px solid #bbb;
+    font-size: 18px;
+    /*font-size: 0.7vw;*/
+    width:19.5%;
+}
+
+.navbar li:last-child {
+    border-right: none;
+}
+
+.navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 12px;
+    text-decoration: none;
+}
+
+/* color of selected nav bar item */
+.active {
+    background-color: #4CAF50;
+}
+
+/* color of semi-active nav bar item, like About > FAQ, this
+* would highlight About this color, and FAQ the .active color */
+.semi-active {
+    background-color: rgba(76, 175, 80, 0.51);
+}
+
+/* for the dropdown menu:*/
+
+/* When we hover over the nav bar: */
+.navbar li a:hover:not(.active) {
+    background-color: #111111;
+}
+
+li.dropdown {
+  display: inline-block;
+}
+/* For drop-down sub menus (example would be About > FAQ) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #333333;
+    min-width: 12%;
+}
+
+.dropdown-content a {
+    display: block;
+    text-align: left;
+}
+
+/* Dropdown style for menu bar */
+.dropdown:hover .dropdown-content {
+    display: block;
+    /* Maybe overkill, but a standard "border" tag would include the top, which we don't want.
+     This would make a black line appear between "About" and "FAQ" */
+    border-left: 1px solid #000000;
+    border-right: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+}

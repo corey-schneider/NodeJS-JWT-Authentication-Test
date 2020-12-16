@@ -37,6 +37,8 @@
 </body>
 
 <script>
+    
+
     function login() {
         const data = {
             username: document.getElementById('username').value,
@@ -65,7 +67,9 @@
         }).then(res => {
             if(res && res.data && res.data.success) {
                 document.querySelector('h1.row').innerHTML = 'Dashboard';
-                document.querySelector('main').innerHTML = res.data.myContent + "<br><button onclick=\"getSettings()\">Settings</button>";
+                document.querySelector('main').innerHTML = res.data.myContent + "<br><button onclick=\"getSettings()\">Settings</button>" +
+                "<button onclick=\"getPrices()\">Get prices</button>" +
+                "<button onclick=\"logOut()\">Log out</button>";
             }
         });
     }
@@ -84,6 +88,29 @@
                 document.querySelector('main').innerHTML = res.data.myContent + "<br><button onclick=\"getDashboard()\">Dashboard</button>";
             }
         });
+    }
+
+    function getPrices() {
+        const token = localStorage.getItem('jwt');
+        window.addEventListener('popstate', e => console.log(e) );
+        history.pushState({success:true, myContent:'Prices pagee'}, '', '/api/prices')
+        axios.get('/api/prices', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(res => {
+            if(res && res.data && res.data.success) {
+                document.querySelector('h1.row').innerHTML = 'Prices';
+                document.querySelector('main').innerHTML = res.data.myContent + "<br><button onclick=\"getDashboard()\">Dashboard</button>";
+            }
+        });
+    }
+
+    function logOut() {
+        const token = localStorage.removeItem('jwt');
+        window.addEventListener('popstate', e => console.log(e) );
+        history.pushState({success:true, myContent:'Bye'}, '', '/')
+        axios.post('/')
     }
 
     function onLoad() {
