@@ -1,11 +1,13 @@
 import React from 'react';
 import './App2.css';
 import axios from 'axios';
+import Button from './Button/Button';
+import Navigation from './Navigation/Navigation';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {username: ''};
+    this.state = {user: '', token: '', myContent: ''};
   }
 
   async callAPI() {
@@ -26,32 +28,66 @@ class App extends React.Component {
     this.callAPI();
   }
 
+  handleLogin() {
+    const token = localStorage.getItem('jwt');
+    if(token) {
+    const data = {
+      username: document.getElementById('username').value,
+      password: document.getElementById('password').value,
+  };
+  axios.post('/api/login', data).then(res => {
+      console.log(res);
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      if(res && res.data.success) {
+          const token = res.data.token;
+          localStorage.setItem('jwt', token);
+      }
+  });
+}
+  }
+
 //function App() {
   render() {
+
   return (
     <div className="App">
       <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
+        <br/>
+        <Navigation/>
       </header>
-      <div className="navbar" aria-label="Navigation bar">
-        <ul>
-            <li><a class="active" href="#">Home</a></li>
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Configure budgets</a></li>
-            <li><a href="#">[empty]</a></li>
-            <li class="dropdown">
-                <a href="#">Log in</a>
-                <div class="dropdown-content">
-                    <a href="#">dropdown 1</a>
-                    <a href="#">dropdown 2</a>
-                </div>
-            </li>
-        </ul>
-    </div>
-    <p>Hi, {this.state.username}</p>
+
+
+    <p>Hi user, {this.state.user}</p>
+    <p>Hey token, {this.state.token}</p>
+    <p>Howdy myContent, {this.state.myContent}</p>
     <br/>
+
+    <br/>
+
+
+    <main>
+            <div class="row">
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username"/>
+            </div>
+
+            <div class="row">
+                <label for="password">password</label>
+                <input type="text" name="password" id="password"/>
+            </div>
+
+            <div>
+                {/* <button onclick="login()">Login</button>
+                <button onclick="getDashboard()">Get Dashboard</button>
+                <button onclick="getSettings()">Settings</button> */}
+                <br/>
+                <Button title="Login" onClick={() => this.handleLogin} />
+                <Button title="Get Dashboard" />
+                <Button title="Settings" />
+            </div>
+        </main>
+
 
 
     <p>{this.state.response}</p>
